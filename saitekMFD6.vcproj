@@ -255,6 +255,10 @@
 				RelativePath=".\saitekX52ProClass.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\Transponder.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Library Files"
