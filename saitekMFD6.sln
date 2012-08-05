@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimData", "SimData.vcproj", "{1CDAB80C-F7EE-47B8-83BC-BC6B22D30E0B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "saitekMFD6", "saitekMFD6.vcproj", "{659A7A05-6D6A-469F-876F-6A062EFCE398}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1CDAB80C-F7EE-47B8-83BC-BC6B22D30E0B}.Debug|Win32.ActiveCfg = Debug|Win32
-		{1CDAB80C-F7EE-47B8-83BC-BC6B22D30E0B}.Debug|Win32.Build.0 = Debug|Win32
-		{1CDAB80C-F7EE-47B8-83BC-BC6B22D30E0B}.Release|Win32.ActiveCfg = Release|Win32
-		{1CDAB80C-F7EE-47B8-83BC-BC6B22D30E0B}.Release|Win32.Build.0 = Release|Win32
+		{659A7A05-6D6A-469F-876F-6A062EFCE398}.Debug|Win32.ActiveCfg = Debug|Win32
+		{659A7A05-6D6A-469F-876F-6A062EFCE398}.Debug|Win32.Build.0 = Debug|Win32
+		{659A7A05-6D6A-469F-876F-6A062EFCE398}.Release|Win32.ActiveCfg = Release|Win32
+		{659A7A05-6D6A-469F-876F-6A062EFCE398}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
