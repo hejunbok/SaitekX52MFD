@@ -6,53 +6,54 @@
 #include <regex>
 
 using namespace std;
-using namespace std::tr1;
+//using namespace std::tr1;
 
-const regex debugName( "^debug$", std::regex_constants::icase );
-const regex blinkName( "^blinkInterval$", std::regex_constants::icase );
-const regex fireAName( "^fire_a$", std::regex_constants::icase );
-const regex fireBName( "^fire_b$", std::regex_constants::icase );
-const regex fireDName( "^fire_d$", std::regex_constants::icase );
-const regex fireEName( "^fire_e$", std::regex_constants::icase );
-const regex t1Name( "^t1$", std::regex_constants::icase );
-const regex t2Name( "^t2$", std::regex_constants::icase );
-const regex t3Name( "^t3$", std::regex_constants::icase );
-const regex pov2Name( "^pov2$", std::regex_constants::icase );
-const regex clutchName( "^clutch$", std::regex_constants::icase );
-const regex fireButtonName( "^fire_button$", std::regex_constants::icase);
-const regex throttleAxisName( "^throttle_axis$", std::regex_constants::icase );
+
+const std::tr1::regex debugName( "^debug$", std::tr1::regex_constants::icase );
+const std::tr1::regex blinkName( "^blinkInterval$", std::tr1::regex_constants::icase );
+const std::tr1::regex fireAName( "^fire_a$", std::tr1::regex_constants::icase );
+const std::tr1::regex fireBName( "^fire_b$", std::tr1::regex_constants::icase );
+const std::tr1::regex fireDName( "^fire_d$", std::tr1::regex_constants::icase );
+const std::tr1::regex fireEName( "^fire_e$", std::tr1::regex_constants::icase );
+const std::tr1::regex t1Name( "^t1$", std::tr1::regex_constants::icase );
+const std::tr1::regex t2Name( "^t2$", std::tr1::regex_constants::icase );
+const std::tr1::regex t3Name( "^t3$", std::tr1::regex_constants::icase );
+const std::tr1::regex pov2Name( "^pov2$", std::tr1::regex_constants::icase );
+const std::tr1::regex clutchName( "^clutch$", std::tr1::regex_constants::icase );
+const std::tr1::regex fireButtonName( "^fire_button$", std::tr1::regex_constants::icase);
+const std::tr1::regex throttleAxisName( "^throttle_axis$", std::tr1::regex_constants::icase );
 // Special-LED's
 // GEARS
-const regex landingGearName( "^landing_gear_led$", std::regex_constants::icase );
-const regex landingGearTrans("^landing_gear_trans$", std::regex_constants::icase );
-const regex landingGearUp("^landing_gear_up$", std::regex_constants::icase );
-const regex landingGearDown("^landing_gear_down$", std::regex_constants::icase );
-const regex landingGearFail("^landing_gear_fail$", std::regex_constants::icase );
+const std::tr1::regex landingGearName( "^landing_gear_led$", std::tr1::regex_constants::icase );
+const std::tr1::regex landingGearTrans("^landing_gear_trans$", std::tr1::regex_constants::icase );
+const std::tr1::regex landingGearUp("^landing_gear_up$", std::tr1::regex_constants::icase );
+const std::tr1::regex landingGearDown("^landing_gear_down$", std::tr1::regex_constants::icase );
+const std::tr1::regex landingGearFail("^landing_gear_fail$", std::tr1::regex_constants::icase );
 // FLAPS
-const regex flapsStatusName( "^flaps_status_led$", std::regex_constants::icase );
-const regex flapsStatusOut( "^flaps_status_out$", std::regex_constants::icase );
-const regex flapsStatusUp( "^flaps_status_up$", std::regex_constants::icase );
-const regex flapsStatusFull( "^flaps_status_full$", std::regex_constants::icase );
-const regex flapsStatusFail( "^flaps_status_fail$", std::regex_constants::icase );
+const std::tr1::regex flapsStatusName( "^flaps_status_led$", std::tr1::regex_constants::icase );
+const std::tr1::regex flapsStatusOut( "^flaps_status_out$", std::tr1::regex_constants::icase );
+const std::tr1::regex flapsStatusUp( "^flaps_status_up$", std::tr1::regex_constants::icase );
+const std::tr1::regex flapsStatusFull( "^flaps_status_full$", std::tr1::regex_constants::icase );
+const std::tr1::regex flapsStatusFail( "^flaps_status_fail$", std::tr1::regex_constants::icase );
 // SIM ist Running?
-const regex isRunningStatusName( "^sim_is_running_led$", std::regex_constants::icase );
-const regex isRunningStatusPaused( "^sim_is_paused$", std::regex_constants::icase );
-const regex isRunningStatusRunning( "^sim_is_running$", std::regex_constants::icase );
+const std::tr1::regex isRunningStatusName( "^sim_is_running_led$", std::tr1::regex_constants::icase );
+const std::tr1::regex isRunningStatusPaused( "^sim_is_paused$", std::tr1::regex_constants::icase );
+const std::tr1::regex isRunningStatusRunning( "^sim_is_running$", std::tr1::regex_constants::icase );
 
 // Values
-const regex numberValue( "^[[:digit:]]+$" );
-const regex boolValue( "true|1", std::regex_constants::icase );
-const regex redValue( "red", std::regex_constants::icase );
-const regex greenValue( "green", std::regex_constants::icase );
-const regex amberValue( "amber", std::regex_constants::icase );
-const regex offValue( "off|0|false", std::regex_constants::icase );
-const regex blinkValue( "blink", std::regex_constants::icase );
-const regex statusLedValue( "fire_a|fire_b|fire_d|fire_e|t1|t2|t3|pov2|clutch|fire_button", std::regex_constants::icase );
+const std::tr1::regex numberValue( "^[[:digit:]]+$" );
+const std::tr1::regex boolValue( "true|1", std::tr1::regex_constants::icase );
+const std::tr1::regex redValue( "red", std::tr1::regex_constants::icase );
+const std::tr1::regex greenValue( "green", std::tr1::regex_constants::icase );
+const std::tr1::regex amberValue( "amber", std::tr1::regex_constants::icase );
+const std::tr1::regex offValue( "off|0|false", std::tr1::regex_constants::icase );
+const std::tr1::regex blinkValue( "blink", std::tr1::regex_constants::icase );
+const std::tr1::regex statusLedValue( "fire_a|fire_b|fire_d|fire_e|t1|t2|t3|pov2|clutch|fire_button", std::tr1::regex_constants::icase );
 // etc
-const regex commentLine("^#.*");                                             // Kommentarzele, ignorieren
-const regex comment("#.*$");                                                 // Kommentar, löschen
-const regex emptyLine( "^\\s*$" );                                           // Leere Zeilen
-const regex trimStrings( "(^\\s*)|(\\s*$)" );                                // Strings trimmen
+const std::tr1::regex commentLine("^#.*");                                             // Kommentarzele, ignorieren
+const std::tr1::regex comment("#.*$");                                                 // Kommentar, löschen
+const std::tr1::regex emptyLine( "^\\s*$" );                                           // Leere Zeilen
+const std::tr1::regex trimStrings( "(^\\s*)|(\\s*$)" );                                // Strings trimmen
 
 
 //#############################################################################

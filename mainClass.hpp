@@ -60,7 +60,7 @@ private:
   logThreadClass *plogThreadClass;                                   // Zeiger für die Logging Thread-Klasse
   pluginConfigClass *pPluginConfigClass;                             // Zeiger für die Configurationsklase
   saitekX52ProClass *psaitekX52ProClass;                             // Klasse für Funktionen des Sticks  static float oldGearDeploy[MAXPAGES];                              // Welcher Fahrwerkstatus wars denn?
-  Transponder transponder;
+  Transponder *transponder;                                           // Die Klasse hier einbringen (autokonstrukt?)
   XPLMDataRef groundSpeedRef;                                        // Referenz en vom Simulator
   XPLMDataRef indicatedAirSpeedRef;
   XPLMDataRef verticalSpeedRef;
@@ -81,7 +81,7 @@ private:
   XPLMDataRef landingLightsOn;                                       // Ist das Landelicht AN?
   XPLMDataRef simIsPaused;                                           // Pause oder nicht? int
   // Add HLM
-  XPLMDataRef dme_dist_nav1;                                       // Ist das Landelicht AN?
+  XPLMDataRef dme_dist_nav1;                                         // Ist das Landelicht AN?
   XPLMDataRef dme_dist_nav2;
   XPLMDataRef barometer_setting;
   // End add HLM

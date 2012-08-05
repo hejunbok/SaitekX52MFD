@@ -73,12 +73,13 @@ mainClass::mainClass( string& logFileName, string& configFileName ) :
   indicatedAirSpeedRef(0), verticalSpeedRef(0),elevationRev(0),
   com1Ref(0),com2Ref(0),com1StbyRef(0),com2StbyRef(0),
   nav1Ref(0),nav2Ref(0),nav1StbyRef(0),nav2StbyRef(0),
-  currCursorSelect(saSEL_NONE),upDownMode(saUD_SELECT),clickMode(saCLICK_CHANGE),transponder()
+  currCursorSelect(saSEL_NONE),upDownMode(saUD_SELECT),clickMode(saCLICK_CHANGE),transponder(0)
 {
   try
   {
     plogThreadClass = new logThreadClass( logFileName );             // Erzeuge den zentrale LOG Thread
     pPluginConfigClass = new pluginConfigClass( configFileName );    // Die Konfigurationsklasse erzeugen
+    transponder= new Transponder();                                  // Transponderobjekt create from head (dmarc)
     pPluginConfigClass->setLogThreadClass( plogThreadClass );        // Klasse fuer Loggen bereitmachen
     pPluginConfigClass->readConfig();                                // Jetzt lese die Configuration!
     debug = pPluginConfigClass->isDebug();                           // Debugstatus eintragen
@@ -162,11 +163,11 @@ bool mainClass::initProgrammData( void )
     landingLightsOn        = XPLMFindDataRef("sim/cockpit/electrical/landing_lights_on");  //bool Landelichter AN?
     flapsDeploy            = XPLMFindDataRef("sim/cockpit2/controls/flap_handle_deploy_ratio"); // float Gesamt-Status Klappen
     simIsPaused            = XPLMFindDataRef("sim/time/paused");                           // int Sim ist in den ferien
-	// Added by Cmoirv
-	dme_dist_nav1          = XPLMFindDataRef("sim/cockpit/radios/nav1_dme_dist_m");
-	dme_dist_nav2          = XPLMFindDataRef("sim/cockpit/radios/nav2_dme_dist_m");
-	barometer_setting      = XPLMFindDataRef("sim/cockpit/misc/barometer_setting");
-	//End added by Cmoirv
+    // Added by Cmoirv
+    dme_dist_nav1          = XPLMFindDataRef("sim/cockpit/radios/nav1_dme_dist_m");
+    dme_dist_nav2          = XPLMFindDataRef("sim/cockpit/radios/nav2_dme_dist_m");
+    barometer_setting      = XPLMFindDataRef("sim/cockpit/misc/barometer_setting");
+    //End added by Cmoirv
     for( i=0; i< MAXPAGES; i++ )
     {
       oldGearDeploy[i] = 5.0;
@@ -214,15 +215,15 @@ float mainClass::doMFDDisplay( void )
     case saSEL_NONE:                                                 // nichts selektiert
       displayFormatIndex1 = 0;
       displayFormatIndex2 = 0;
-	  if(transponder.getMode() == TRANSPONDER_OFF)						// manage transponder mode
-		{
-			displayTransponder = 9;
-		}
-		else
-		{
-			displayTransponder = 0;
-		}
-	  displayTransponderMode = 0;
+      if(transponder->getMode() == TRANSPONDER_OFF)						         // manage transponder mode
+      {
+	      displayTransponder = 9;
+      }
+      else
+      {
+	      displayTransponder = 0;
+      }
+      displayTransponderMode = 0;
       break;
     case saSEL_TOPLEFT:                                              // Markierung oben links (COM1,COM2)
       displayFormatIndex1 = 1;
@@ -250,31 +251,30 @@ float mainClass::doMFDDisplay( void )
       break;
     case saSEL_TPR_THDS:											// transponder selection : thousands
       displayTransponder = 1;
-	  displayTransponderMode = 0;
+      displayTransponderMode = 0;
       break;
     case saSEL_TPR_HDS: 											// transponder selection : hundreds                                   
       displayTransponder = 2;
-	  displayTransponderMode = 0;
+      displayTransponderMode = 0;
       break;
     case saSEL_TPR_TENS:											// transponder selection : tens                                    
       displayTransponder = 3;
-	  displayTransponderMode = 0;
+      displayTransponderMode = 0;
       break;
     case saSEL_TPR_UNTS:											// transponder selection : units                                   
       displayTransponder = 4;
-	  displayTransponderMode = 0;
+      displayTransponderMode = 0;
       break;
     case saSEL_TPR_MODE:											// transponder selection : mode
-		if(transponder.getMode() == TRANSPONDER_OFF)
-		{
-			displayTransponder = 9;
-		}
-		else
-		{
-			displayTransponder = 0;
-		}
-      
-	  displayTransponderMode = 1;
+      if(transponder->getMode() == TRANSPONDER_OFF)
+      {
+	      displayTransponder = 9;
+      }
+      else
+      {
+	      displayTransponder = 0;
+      }
+      displayTransponderMode = 1;
       break;
     }
   }
@@ -282,14 +282,14 @@ float mainClass::doMFDDisplay( void )
   {
     displayFormatIndex1 += 7;                                        // Selektionsmodus
     displayFormatIndex2 += 7;
-	if(currCursorSelect == saSEL_TPR_MODE)
-	{
-		displayTransponderMode +=1;
-	}
-	else
-	{
-		displayTransponder +=4;
-	}
+    if(currCursorSelect == saSEL_TPR_MODE)
+    {
+      displayTransponderMode +=1;
+    }
+    else
+    {
+      displayTransponder +=4;
+    }
   }
   // Display aktualisieren
  // Welche Seite ist aktiv?
@@ -338,34 +338,31 @@ float mainClass::doMFDDisplay( void )
     break;
   case 3:            // Added DME distances by Cmoirv                                             
     psaitekX52ProClass->setString( activePage, 0, wstring( L" DME DISTANCES  " ) );
-	swprintf( (wchar_t *)&wbuffer[0], 16, L" NAV1 %03.1f NM \0", XPLMGetDataf( dme_dist_nav1 ));
-	psaitekX52ProClass->setString( activePage, 1, wstring( (wchar_t *)&wbuffer[0] ) );
-	swprintf( (wchar_t *)&wbuffer[0], 16, L" NAV2 %03.1f NM \0", XPLMGetDataf( dme_dist_nav2 ));
-	psaitekX52ProClass->setString( activePage, 2, wstring( (wchar_t *)&wbuffer[0] ) );
-
+    swprintf( (wchar_t *)&wbuffer[0], 16, L" NAV1 %03.1f NM \0", XPLMGetDataf( dme_dist_nav1 ));
+    psaitekX52ProClass->setString( activePage, 1, wstring( (wchar_t *)&wbuffer[0] ) );
+    swprintf( (wchar_t *)&wbuffer[0], 16, L" NAV2 %03.1f NM \0", XPLMGetDataf( dme_dist_nav2 ));
+    psaitekX52ProClass->setString( activePage, 2, wstring( (wchar_t *)&wbuffer[0] ) );
     return( float(0.5) );                                            
     break;
   case 4:            // Added selection of QNH by Cmoirv                                           
     psaitekX52ProClass->setString( activePage, 0, wstring( L" Baro Setting  \0" ) );
-	swprintf( (wchar_t *)&wbuffer[0], 16, L" %02.2f mmHg \0", XPLMGetDataf(barometer_setting) );
-	psaitekX52ProClass->setString( activePage, 1, wstring( (wchar_t *)&wbuffer[0] ) );
-	swprintf( (wchar_t *)&wbuffer[0], 16, L" %04.0f hPa \0", XPLMGetDataf(barometer_setting) * 254 * 0.133322368421);
-	psaitekX52ProClass->setString( activePage, 2, wstring( (wchar_t *)&wbuffer[0] ) );
-	
+    swprintf( (wchar_t *)&wbuffer[0], 16, L" %02.2f mmHg \0", XPLMGetDataf(barometer_setting) );
+    psaitekX52ProClass->setString( activePage, 1, wstring( (wchar_t *)&wbuffer[0] ) );
+    swprintf( (wchar_t *)&wbuffer[0], 16, L" %04.0f hPa \0", XPLMGetDataf(barometer_setting) * 254 * 0.133322368421);
+    psaitekX52ProClass->setString( activePage, 2, wstring( (wchar_t *)&wbuffer[0] ) );
     return( float(0.5) );                                            
     break;// 
   case 5:           // Added selection of squawk code and transponder mode by Cmoirv   
     psaitekX52ProClass->setString( activePage, 0, wstring( L" Transponder  \0" ) );
-	swprintf( (wchar_t *)&wbuffer[0], 16, displayFormatTransponder[displayTransponder], 
-										transponder.getThousands(), 
-										transponder.getHundreds(), 
-										transponder.getTens(), 
-										transponder.getUnits());
-	psaitekX52ProClass->setString( activePage, 1, wstring( (wchar_t *)&wbuffer[0] ) );
-	swprintf( (wchar_t *)&wbuffer[0], 16, displayFormatTransponderMode[displayTransponderMode], 
-										transponder.getModeString());
-	psaitekX52ProClass->setString( activePage, 2, wstring( (wchar_t *)&wbuffer[0] ) );
-	
+    swprintf( (wchar_t *)&wbuffer[0], 16, displayFormatTransponder[displayTransponder], 
+								    transponder->getThousands(), 
+								    transponder->getHundreds(), 
+								    transponder->getTens(), 
+								    transponder->getUnits());
+    psaitekX52ProClass->setString( activePage, 1, wstring( (wchar_t *)&wbuffer[0] ) );
+    swprintf( (wchar_t *)&wbuffer[0], 16, displayFormatTransponderMode[displayTransponderMode], 
+								    transponder->getModeString());
+    psaitekX52ProClass->setString( activePage, 2, wstring( (wchar_t *)&wbuffer[0] ) );
     return( float(0.5) );                                           
     break;
   default:
@@ -555,23 +552,23 @@ void mainClass::countValue( saDIRECTION dir )
   }// Added transponder selection by Cmoirv 
   else if( currCursorSelect == saSEL_TPR_THDS ) 
   {
-	  transponder.setThousands(transponder.getThousands() + diff);
+	  transponder->setThousands(transponder->getThousands() + diff);
   }
   else if( currCursorSelect == saSEL_TPR_HDS ) 
   {
-	  transponder.setHundreds(transponder.getHundreds() + diff);
+	  transponder->setHundreds(transponder->getHundreds() + diff);
   }
   else if( currCursorSelect == saSEL_TPR_TENS ) 
   {
-	  transponder.setTens(transponder.getTens() + diff);
+	  transponder->setTens(transponder->getTens() + diff);
   }
   else if( currCursorSelect == saSEL_TPR_UNTS ) 
   {
-	  transponder.setUnits(transponder.getUnits() + diff);
+	  transponder->setUnits(transponder->getUnits() + diff);
   }
   else if( currCursorSelect == saSEL_TPR_MODE ) 
   {
-	  transponder.setMode(transponder.getMode() + diff);
+	  transponder->setMode(transponder->getMode() + diff);
   }
 }
 
@@ -715,7 +712,7 @@ void mainClass::cycleSelection( saDIRECTION dir )
 		  currCursorSelect = saSEL_TPR_MODE;
 		else
 		{
-			if(transponder.getMode() != TRANSPONDER_OFF)
+			if(transponder->getMode() != TRANSPONDER_OFF)
 			{
 				currCursorSelect = saSEL_TPR_THDS;
 			}
@@ -751,7 +748,7 @@ void mainClass::cycleSelection( saDIRECTION dir )
 		  currCursorSelect = saSEL_TPR_MODE;
 		break;
 	  case saSEL_TPR_MODE:    
-		  if(transponder.getMode() != TRANSPONDER_OFF)
+		  if(transponder->getMode() != TRANSPONDER_OFF)
 		  {
 			if( dir == saCOUNT_UP )                                          
 			  currCursorSelect = saSEL_TPR_UNTS;

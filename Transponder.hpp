@@ -1,8 +1,11 @@
-#include <iostream>
-#include <string>
+#pragma once
+
+#include "projectCommon.h"
 #include <XPLMDataAccess.h>
 #include <XPLMProcessing.h>
 #include <XPLMUtilities.h>
+#include <iostream>
+#include <string>
 
 #define TRANSPONDER_OFF 0
 #define TRANSPONDER_STBY 1
@@ -12,34 +15,33 @@
 
 class Transponder
 {
-private :
-	int _units, _tens, _hundreds, _thousands;
-	int _code;
-	int _mode;
-
-	XPLMDataRef transponder_code;
-	XPLMDataRef transponder_mode;
-
-public :
-
-	Transponder();
-	void setUnits(int unit);
-	void setTens(int tens);
-	void setHundreds(int hundreds);
-	void setThousands(int thousands);
-	void setCode(int code);
-	void setCode();
-	void buildAndSetCode();
-	void setMode();
-	void setMode(int mode);
+  public :
+	  Transponder(void);
+	  void setUnits(int unit);
+	  void setTens(int tens);
+	  void setHundreds(int hundreds);
+	  void setThousands(int thousands);
+	  void setCode(int code);
+	  void setCode();
+	  void buildAndSetCode();
+	  void setMode();
+	  void setMode(int mode);
 
 
-	int getUnits();
-	int getTens();
-	int getHundreds();
-	int getThousands();
-	int getCode();
-	int getMode();
-	wchar_t * getModeString();
+	  int getUnits();
+	  int getTens();
+	  int getHundreds();
+	  int getThousands();
+	  int getCode();
+	  int getMode();
+	  wchar_t * getModeString();
+
+  private :
+	  int _units, _tens, _hundreds, _thousands;
+	  int _code;
+	  int _mode;
+
+	  XPLMDataRef transponder_code;
+	  XPLMDataRef transponder_mode;
 
 };
